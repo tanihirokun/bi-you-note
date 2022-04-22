@@ -1,4 +1,4 @@
-import React, { useState, VFC } from "react";
+import React, { useEffect, useState, VFC } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -13,7 +13,10 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useForm } from "react-hook-form";
 import { pink } from "@mui/material/colors";
-import { Flex } from "@chakra-ui/react";
+import { auth } from "../../firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 
 type AuthDataTypes = {
   email: string;
@@ -29,10 +32,7 @@ const Copyright = (props: any) => {
       {...props}
     >
       {"Copyright © "}
-      <span>
-        bi-you note
-      </span>{" "}
-      {new Date().getFullYear()}
+      <span>bi-you note</span> {new Date().getFullYear()}
       {"."}
     </Typography>
   );
@@ -45,10 +45,11 @@ export const SignForm: VFC = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm<AuthDataTypes>();
 
   //サインイン画面かサインアップ画面か切り替えをuseStateで管理
   const [isSignIn, setIsSignIn] = useState(true);
+  const navigate = useNavigate();
 
   // const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
   //   event.preventDefault();
@@ -58,6 +59,35 @@ export const SignForm: VFC = () => {
   //     password: data.get('password'),
   //   });
   // };
+
+  //ログイン処理
+  const ClickSignIn = async (data: AuthDataTypes) => {
+    const { email, password } = data;
+    try {
+      //書き方が変わったので注意
+      await signInWithEmailAndPassword(auth, email, password);
+      navigate("/home");
+    } catch (error: any) {
+      alert(error.message);
+    }
+  };
+  //新規登録
+  const ClickSignUp = async (data: AuthDataTypes) => {
+    const { email, password } = data;
+    try {
+      //書き方が変わったので注意
+      await createUserWithEmailAndPassword(auth, email, password);
+      navigate("/home");
+    } catch (error: any) {
+      alert(error.message);
+    }
+  };
+
+  useEffect(() => {
+    auth.onAuthStateChanged((user) => {
+      user && navigate("/home");
+    });
+  }, [navigate]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -79,7 +109,9 @@ export const SignForm: VFC = () => {
           </Typography>
           <Box
             component="form"
-            //  onSubmit={}
+            onSubmit={
+              isSignIn ? handleSubmit(ClickSignIn) : handleSubmit(ClickSignUp)
+            }
             noValidate
             sx={{ mt: 1 }}
           >
@@ -129,7 +161,7 @@ export const SignForm: VFC = () => {
                 mb: 2,
                 p: 2,
                 fontSize: 15,
-                fontWeight: 'Bold',
+                fontWeight: "Bold",
                 background: pink[200],
                 "&:hover": {
                   background: pink[100],
