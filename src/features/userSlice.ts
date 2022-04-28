@@ -1,30 +1,44 @@
-import {createSlice, } from '@reduxjs/toolkit';
-import { RootState } from '../app/store';
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { RootState } from "../app/store";
+import { db } from "../firebase";
+import {collection} from "firebase/firestore";
 
 
-const initialState= {
-  user: {
-    uid: '',
-    photoUrl: '',
-    displayName: '',
-  }
+interface TaskState {
+  tasks: {
+    address1: string;
+    age: number;
+    firstName: string;
+    gender: string;
+    lastName: string;
+    text: string;
+  };
+}
+const colRef = collection(db, 'tasks')
+
+export const fetchUsers = createAsyncThunk("task/getAllTasks", async () => {
+  //日付の降順（新しいデータが上に来る）にデータをソートしてtaskのデータを全件取得
+  //db.collectionはcloud firebaseのコレクションでつけた名前
+  //orderByは作られた中身のdateTime
+  // const res = await colRef.orderBy("dateTime", "desc").get();
+})
+
+
+
+const initialState = {
+  tasks: []
 };
 
 export const userSlice = createSlice({
-  name: 'user',
+  name: "user",
   initialState,
-  // The `reducers` field lets us define reducers and generate associated actions
   reducers: {
     login: (state, action) => {
-      state.user = action.payload;
+      state.tasks = action.payload;
     },
-    logOut: (state) => {
-      state.user = {uid:'', photoUrl:'', displayName:''}
-    },
-
   },
 });
 
-export const { login, logOut } = userSlice.actions;
-export const selectUser = (state: RootState) => state.user.user;
+export const { login, } = userSlice.actions;
+// export const selectUser = (state: RootState) => state.user.user;
 export default userSlice.reducer;

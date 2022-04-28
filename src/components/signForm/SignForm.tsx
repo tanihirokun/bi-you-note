@@ -1,9 +1,9 @@
 import React, { useEffect, useState, VFC } from "react";
+
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -13,9 +13,10 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useForm } from "react-hook-form";
 import { pink } from "@mui/material/colors";
-import { auth } from "../../firebase";
+import { auth, provider } from "../../firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import { signInWithPopup } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 
 type AuthDataTypes = {
@@ -51,15 +52,6 @@ export const SignForm: VFC = () => {
   const [isSignIn, setIsSignIn] = useState(true);
   const navigate = useNavigate();
 
-  // const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-  //   event.preventDefault();
-  //   const data = new FormData(event.currentTarget);
-  //   console.log({
-  //     email: data.get('email'),
-  //     password: data.get('password'),
-  //   });
-  // };
-
   //ログイン処理
   const ClickSignIn = async (data: AuthDataTypes) => {
     const { email, password } = data;
@@ -77,6 +69,16 @@ export const SignForm: VFC = () => {
     try {
       //書き方が変わったので注意
       await createUserWithEmailAndPassword(auth, email, password);
+      navigate("/home");
+    } catch (error: any) {
+      alert(error.message);
+    }
+  };
+  //googoleでログイン
+  const ClickGoogleSignIn = async (data: any) => {
+    try {
+      //書き方が変わったので注意
+      await signInWithPopup(auth, provider);
       navigate("/home");
     } catch (error: any) {
       alert(error.message);
@@ -159,7 +161,7 @@ export const SignForm: VFC = () => {
               sx={{
                 mt: 3,
                 mb: 2,
-                p: 2,
+                py: 2,
                 fontSize: 15,
                 fontWeight: "Bold",
                 background: pink[200],
@@ -169,6 +171,24 @@ export const SignForm: VFC = () => {
               }}
             >
               {isSignIn ? "ログインする" : "新規登録する"}
+            </Button>
+            <Button
+              fullWidth
+              variant="contained"
+              sx={{
+                mt: 1,
+                mb: 3,
+                p: 1,
+                fontSize: 15,
+                fontWeight: "Bold",
+                background: pink[200],
+                "&:hover": {
+                  background: pink[100],
+                },
+              }}
+              onClick={ClickGoogleSignIn}
+            >
+              sign in with Google
             </Button>
             <Grid container>
               <Grid item lg>

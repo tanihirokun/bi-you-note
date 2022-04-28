@@ -4,9 +4,9 @@ import "./index.css";
 import { store } from "./app/store";
 import { Provider } from "react-redux";
 import * as serviceWorker from "./serviceWorker";
-import { Router } from "./router/Router";
+import { Router } from "./components/router/Router";
 import { BrowserRouter } from "react-router-dom";
-import { ScrollToTop } from "./router/ScrollToTop";
+import { ScrollToTop } from "./components/router/ScrollToTop";
 
 const container = document.getElementById("root") as HTMLDivElement;
 const root = createRoot(container);
