@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import { SignForm } from './features/signForm/SignForm';
+import { SignForm } from './components/signForm/SignForm';
 
 function App() {
 
