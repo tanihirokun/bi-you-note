@@ -1,4 +1,4 @@
-import React, { memo, useState, VFC } from "react";
+import React, { memo, VFC } from "react";
 
 import { Grid } from "@mui/material";
 import Typography from "@mui/material/Typography";
@@ -11,9 +11,21 @@ import GirlIcon from "@mui/icons-material/Girl";
 import TransgenderIcon from "@mui/icons-material/Transgender";
 import { grey } from "@mui/material/colors";
 import { UserListDialog } from "./UserListDialog";
+// import { useSelector } from "react-redux";
+// import { selectUser } from "../../features/userSlice";
 
-export const UserListCard: VFC = memo(() => {
-  const [gender, setGender] = useState("male");
+type Props = {
+  address1?: string;
+  age?: number;
+  firstName?: string;
+  gender?: string;
+  lastName?: string;
+};
+
+export const UserListCard: VFC<Props> = memo((props) => {
+  const {  age, firstName, gender, lastName} =
+    props;
+  // const [genderCheck, setGenderCheck] = useState("male");
   const color = { color: grey[600] };
 
   return (
@@ -35,13 +47,13 @@ export const UserListCard: VFC = memo(() => {
             </Avatar>
           )}
           <Typography variant="h5" component="h2" sx={{ color: color }}>
-            谷川博昭
+            {`${firstName} ${lastName}`}
           </Typography>
           <Typography sx={{ mb: 1.5 }} color="text.secondary">
-            male
+            {gender}
           </Typography>
           <Typography variant="body2" sx={{ color: color }}>
-            30代
+            {age}
           </Typography>
         </CardContent>
         <CardActions sx={{ justifyContent: "center" }}>

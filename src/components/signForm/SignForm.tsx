@@ -10,6 +10,7 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import GoogleIcon from '@mui/icons-material/Google';
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useForm } from "react-hook-form";
 import { pink } from "@mui/material/colors";
@@ -161,7 +162,7 @@ export const SignForm: VFC = () => {
               sx={{
                 mt: 3,
                 mb: 2,
-                py: 2,
+                py: 1,
                 fontSize: 15,
                 fontWeight: "Bold",
                 background: pink[200],
@@ -188,6 +189,7 @@ export const SignForm: VFC = () => {
               }}
               onClick={ClickGoogleSignIn}
             >
+              <GoogleIcon  sx={{fontSize: 18, mr: 1}}/>
               sign in with Google
             </Button>
             <Grid container>
